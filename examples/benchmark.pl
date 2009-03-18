@@ -1,7 +1,6 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use autodie;
 use lib 'lib';
 
 use Benchmark qw( cmpthese );
