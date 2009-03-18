@@ -138,7 +138,7 @@ __END__
 
 =head1 NAME
 
-Set::Tiny - simple sets of strings
+Set::Tiny - Simple sets of strings
 
 =head1 VERSION
 
@@ -150,11 +150,17 @@ Version 0.01
 
     my $s1 = Set::Tiny->new(qw( a b c ));
     my $s2 = Set::Tiny->new(qw( b c d ));
-    my $i  = $s1->intersection($s2);
 
+    my $u  = $s1->union($s2);
+    my $i  = $s1->intersection($s2);
+    my $s  = $d1->symmetric_difference($s2);
+
+    print "$u"; # (a, b, c ,d)
     print "$i"; # (b, c)
-    print $i->is_subset($s1) ? "yes" : "no"; # yes
-    print $i->is_subset($s2) ? "yes" : "no"; # yes
+    print "$s"; # (a, d)
+
+    print "$i is a subset of $s1"   if $i->is_subset($s1);
+    print "$u is a superset of $s1" if $u->is_superset($s1);
 
 =head1 DESCRIPTION
 
@@ -162,12 +168,15 @@ Set::Tiny is a thin wrapper around regular Perl hashes to perform often needed
 set operations, such as testing two lists of strings for equality, or checking
 whether one is contained within the other.
 
-For a more complete implementation of set theory, see L<Set::Scalar>. For sets
-of arbitrary objects instead of just strings, see L<Set::Object>. Set::Tiny has
-less features but is also faster than both of these in most cases. Run
-F<examples/benchmark.pl> for details.
+For a more complete implementation of mathematical set theory, see
+L<Set::Scalar>. For sets of arbitrary objects instead of just strings, see
+L<Set::Object>. Set::Tiny has less features but is also faster than both of
+these in most cases. Run F<examples/benchmark.pl> for details.
 
 =head1 METHODS
+
+Note that all methods that expect a I<list> of set elements stringify their
+arguments before inserting them into the set.
 
 Unless otherwise specified, all methods return the invocant, so you can chain
 method calls, e.g.
@@ -180,7 +189,7 @@ stringification, which calls L</as_string>.
 =head2 new( [I<list>] )
 
 Class method. Returns a new Set::Tiny object, initialized with the strings in
-I<list>.
+I<list>, or the empty set if I<list> is empty.
 
 =head2 clone
 
@@ -255,7 +264,7 @@ Returns true if this set contains the same elements as I<set>.
 =head2 is_disjoint( I<set> )
 
 Returns true if this set has no elements in common with I<set>. Note that the
-empty set is disjoint to any set.
+empty set is disjoint to any other set.
 
 =head2 difference( I<set> )
 
@@ -268,23 +277,19 @@ Returns a new set containing both the elements of this set and I<set>.
 
 =head2 intersection( I<set> )
 
-Returns a new set containing the elements that are present both this set an
+Returns a new set containing the elements that are present in both this set and
 I<set>.
 
 =head2 unique( I<set> )
 
 =head2 symmetric_difference( I<set> )
 
-Returns a new set containing the elements that are contained in either this set
+Returns a new set containing the elements that are present in either this set
 or I<set>, but not in both.
 
 =head1 AUTHOR
 
 Stanis Trendelenburg, C<< <stanis.trendelenburg at gmail.com> >>
-
-=head1 SEE ALSO
-
-L<Set::Scalar>, L<Set::Object>
 
 =head1 BUGS
 
@@ -292,39 +297,14 @@ Please report any bugs or feature requests to C<bug-set-tiny at rt.cpan.org>, or
 the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Set-Tiny>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
-=head1 SUPPORT
-
-You can find documentation for this module with the perldoc command.
-
-    perldoc Set::Tiny
-
-
-You can also look for information at:
-
-=over 4
-
-=item * RT: CPAN's request tracker
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Set-Tiny>
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/Set-Tiny>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/Set-Tiny>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/Set-Tiny/>
-
-=back
-
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2009 Stanis Trendelenburg, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
+
+=head1 SEE ALSO
+
+L<Set::Scalar>, L<Set::Object>
 
