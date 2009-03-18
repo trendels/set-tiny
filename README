@@ -1,7 +1,7 @@
 Set-Tiny
 
 Set::Tiny is a thin wrapper around regular Perl hashes to perform often needed
-set operations, such as testing two lists of strings for equality, or checking
+set operations, such as testing two sets of strings for equality, or checking
 whether one is contained within the other.
 
 For a more complete implementation of mathematical set theory, see Set::Scalar.
