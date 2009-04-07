@@ -153,7 +153,7 @@ Version 0.01
 
     my $u  = $s1->union($s2);
     my $i  = $s1->intersection($s2);
-    my $s  = $d1->symmetric_difference($s2);
+    my $s  = $s1->symmetric_difference($s2);
 
     print "$u"; # (a, b, c ,d)
     print "$i"; # (b, c)
