@@ -1,6 +1,8 @@
 blib*
-Makefile
-Makefile.old
+MANIFEST
+MANIFEST.bak
+META.yml
+Makefile*
 Build
 _build*
 pm_to_blib*
@@ -8,4 +10,3 @@ pm_to_blib*
 .lwpcookies
 Set-Tiny-*
 cover_db
-MANIFEST.bak

@@ -4,5 +4,8 @@
 ~$
 \.bak$
 ^MANIFEST\.SKIP$
+^Makefile
 ^.git/
 ^.gitignore$
+^pm_to_blib
+Set-Tiny-.*
