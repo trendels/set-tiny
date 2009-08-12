@@ -97,8 +97,8 @@ is "$x", "(c)", "cloned $x";
 $x->clear;
 is "$b", "(c)", "$b is unchanged";
 
-my $y = $b->clone                       # (b)
-          ->insert('z')                 # (b, z)
+my $y = $b->clone                       # (c)
+          ->insert('z')                 # (c, z)
           ->union($u)                   # (a, b, c, d, e, z)
           ->difference($i)              # (a, b, d, e, z)
           ->remove('a')                 # (b, d, e, z)
