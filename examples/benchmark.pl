@@ -3,14 +3,16 @@ use strict;
 use warnings;
 use lib 'lib';
 
+# non-representative benchmark of different Set:: modules
+
 use Benchmark qw( cmpthese );
 
 use Set::Tiny;
 use Set::Scalar;
 use Set::Object;
 
-my @a =  0 .. 100;
-my @b = 50 .. 150;
+my @a =  1 .. 100;
+my @b = 51 .. 150;
 
 my $s_t1 = Set::Tiny->new(@a);
 my $s_t2 = Set::Tiny->new(@b);
@@ -109,9 +111,11 @@ my %tests = (
     },
 );
 
+print "running benchmarks with sets of size ",
+      scalar @a, " and ", scalar @b, "\n";
 for my $test (sort keys %tests) {
     print "\n$test:\n";
-    cmpthese( -2, {
+    cmpthese( -1, {
         'Set::Tiny'   => $tests{$test}{t},
         'Set::Scalar' => $tests{$test}{s},
         'Set::Object' => $tests{$test}{o},
