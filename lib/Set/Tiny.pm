@@ -169,9 +169,7 @@ set operations, such as testing two sets of strings for equality, or checking
 whether one is contained within the other.
 
 For a more complete implementation of mathematical set theory, see
-L<Set::Scalar>. For sets of arbitrary objects instead of just strings, see
-L<Set::Object>. Set::Tiny has less features but is also faster than both of
-these in most cases. Run F<examples/benchmark.pl> for details.
+L<Set::Scalar>. For sets of arbitrary objects, see L<Set::Object>.
 
 =head2 Why Set::Tiny?
 
@@ -188,6 +186,8 @@ of C<for> loops (in fact, that's exactly what Set::Tiny does).
 The price in performance you pay for this convenience when using a
 full-featured set implementation like L<Set::Scalar> is way too high if you
 don't actually need the advanced functionality it offers.
+Run F<examples/benchmark.pl> for a (non-representative) comparison
+between different C<Set::> modules.
 
 =item Ease of use
 
@@ -330,4 +330,3 @@ under the same terms as Perl itself.
 =head1 SEE ALSO
 
 L<Set::Scalar>, L<Set::Object>
-

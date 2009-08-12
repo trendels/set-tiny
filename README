@@ -4,11 +4,6 @@ Set::Tiny is a thin wrapper around regular Perl hashes to perform often needed
 set operations, such as testing two sets of strings for equality, or checking
 whether one is contained within the other.
 
-For a more complete implementation of mathematical set theory, see Set::Scalar.
-For sets of arbitrary objects instead of just strings, see Set::Object.
-Set::Tiny has less features but is also faster than both of these in most
-cases. Run examples/benchmark.pl for details.
-
 INSTALLATION
 
 To install this module, run the following commands:
