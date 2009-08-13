@@ -47,19 +47,17 @@ sub clone {
 sub clear {
     my $self = shift;
     %$self = ();
-    return;
+    return $self;
 }
 
 sub insert {
     my $self = shift;
-    my $class = ref $self;
     @{$self}{@_} = ();
     return $self;
 }
 
 sub remove {
     my $self = shift;
-    my $class = ref $self;
     delete @{$self}{@_};
     return $self;
 }
