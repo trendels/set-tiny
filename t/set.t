@@ -1,10 +1,9 @@
-#!perl -T
+#!/usr/bin/perl
 use strict;
-use warnings;
 
-use Test::More tests => 57;
+use Test::More tests => 58;
 
-use Set::Tiny;
+use_ok 'Set::Tiny';
 
 my $a = Set::Tiny->new;
 my $b = Set::Tiny->new(qw( a b c ));
