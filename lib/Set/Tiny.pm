@@ -14,7 +14,7 @@ sub new {
 
 sub as_string {
     my $self = shift;
-    return "(" . join(", ", sort keys %$self) . ")";
+    return "(" . join(" ", sort keys %$self) . ")";
 }
 
 sub size {
@@ -53,23 +53,21 @@ sub clear {
 sub insert {
     my $self = shift;
     my $class = ref $self;
-    my $n = $class->new(@_)->difference($self)->size;
     @{$self}{@_} = ();
-    return $n;
+    return $self;
 }
 
 sub remove {
     my $self = shift;
     my $class = ref $self;
-    my $n = $self->intersection($class->new(@_))->size;
     delete @{$self}{@_};
-    return $n;
+    return $self;
 }
 
 sub invert {
     my $self = shift;
     exists $self->{$_} ? delete $self->{$_} : ($self->{$_} = undef) for @_;
-    return;
+    return $self;
 }
 
 sub is_null {
@@ -107,6 +105,13 @@ sub is_disjoint {
     return $self->intersection($set)->size == 0;
 }
 
+sub is_properly_intersecting {
+    my ($self, $set) = @_;
+    return ! $self->is_disjoint($set)
+            && $self->difference($set)->size != 0
+            && $set->difference($self)->size != 0;
+}
+
 sub difference {
     my ($self, $set) = @_;
     my $class = ref $self;
@@ -134,11 +139,12 @@ sub symmetric_difference {
 }
 
 {
+    *copy = \&clone;
     *has = \&contains;
-    *includes = \&contains;
     *member = \&element;
     *members = \&elements;
     *delete = \&remove;
+    *is_empty = \&is_null;
     *unique = \&symmetric_difference;
 }
 
@@ -165,12 +171,12 @@ Version 0.01
     my $i  = $s1->intersection($s2);
     my $s  = $s1->symmetric_difference($s2);
 
-    print "$u"; # (a, b, c ,d)
-    print "$i"; # (b, c)
-    print "$s"; # (a, d)
+    print $u->as_string; # (a b c d)
+    print $i->as_string; # (b c)
+    print $s->as_string; # (a d)
 
-    print "$i is a subset of $s1"   if $i->is_subset($s1);
-    print "$u is a superset of $s1" if $u->is_superset($s1);
+    print "i is a subset of s1"   if $i->is_subset($s1);
+    print "u is a superset of s1" if $u->is_superset($s1);
 
 =head1 DESCRIPTION
 
@@ -208,8 +214,8 @@ compiler to install. Set::Tiny has no dependencies and contains no C code.
 
 =head1 METHODS
 
-Note that all methods that expect a I<list> of set elements stringify their
-arguments before inserting them into the set.
+Note that all methods that expect a I<list> of set elements stringify
+their arguments before inserting them into the set.
 
 =head2 new( [I<list>] )
 
@@ -218,21 +224,33 @@ I<list>, or the empty set if I<list> is empty.
 
 =head2 clone
 
+=head2 copy
+
 Returns a new set with the same elements as this one.
+
+=head2 insert( [I<list>] )
+
+Inserts the elements in I<list> into the set.
+
+=head2 delete( [I<list>] )
+
+=head2 remove( [I<list>] )
+
+Removes the elements in I<list> from the set. Elements that are not
+members of the set are ignored.
+
+=head2 invert( [I<list>] )
+
+For each element in I<list>, if it is already a member of the set,
+deletes it from the set, else insert it into the set.
+
+=head2 clear
+
+Removes all elements from the set.
 
 =head2 as_string
 
-Returns the list of elements in parentheses, separated by commas.
-
-=head2 size
-
-Returns the number of elements.
-
-=head2 element( [I<string>] )
-
-=head2 member( [I<string>] )
-
-Returns the string if it is contained in the set.
+Returns a string representation of the set.
 
 =head2 elements
 
@@ -240,56 +258,48 @@ Returns the string if it is contained in the set.
 
 Returns the (unordered) list of elements.
 
+=head2 size
+
+Returns the number of elements.
+
 =head2 has( [I<list>] )
 
 =head2 contains( [I<list>] )
 
-=head2 includes( [I<list>] )
-
 Returns true if B<all> of the elements in I<list> are members of the set. If
 I<list> is empty, returns true.
 
-=head2 clear
+=head2 element( [I<string>] )
 
-Removes all elements from the set.
+=head2 member( [I<string>] )
 
-=head2 insert( [I<list>] )
-
-Inserts the elements in I<list> into the set. Returns the number of
-elements that were actually inserted.
-
-=head2 delete( [I<list>] )
-
-=head2 remove( [I<list>] )
-
-Removes the elements in I<list> from the set. Elements that are not
-members of the set are ignored. Returns the number of elements that were
-actually removed.
-
-=head2 invert( [I<list>] )
-
-For each element in I<list>, if it is already a member of the set, deletes it
-from the set, else insert it into the set.
+Returns the string if it is contained in the set.
 
 =head2 is_null
 
+=head2 is_empty
+
 Returns true if the set is the empty set.
 
-=head2 is_subset( I<set> )
+=head2 union( I<set> )
 
-Returns true if this set is a subset of I<set>.
+Returns a new set containing both the elements of this set and I<set>.
 
-=head2 is_proper_subset( I<set> )
+=head2 intersection( I<set> )
 
-Returns true if this set is a proper subset of I<set>.
+Returns a new set containing the elements that are present in both this set and
 
-=head2 is_superset( I<set> )
+=head2 difference( I<set> )
 
-Returns true if this set is a superset of I<set>.
+Returns a new set containing the elements of this set with the elements
+of I<set> removed.
 
-=head2 is_proper_superset( I<set> )
+=head2 unique( I<set> )
 
-Returns true if this set is a proper superset of I<set>.
+=head2 symmetric_difference( I<set> )
+
+Returns a new set containing the elements that are present in either this set
+or I<set>, but not in both.
 
 =head2 is_equal( I<set> )
 
@@ -300,26 +310,26 @@ Returns true if this set contains the same elements as I<set>.
 Returns true if this set has no elements in common with I<set>. Note that the
 empty set is disjoint to any other set.
 
-=head2 difference( I<set> )
+=head2 is_properly_intersecting( I<set> )
 
-Returns a new set containing the elements of this set with the elements of
-I<set> removed.
+Returns true if this set has elements in common with I<set>, but both
+also contain elements that they have not in common with each other.
 
-=head2 union( I<set> )
+=head2 is_proper_subset( I<set> )
 
-Returns a new set containing both the elements of this set and I<set>.
+Returns true if this set is a proper subset of I<set>.
 
-=head2 intersection( I<set> )
+=head2 is_proper_superset( I<set> )
 
-Returns a new set containing the elements that are present in both this set and
-I<set>.
+Returns true if this set is a proper superset of I<set>.
 
-=head2 unique( I<set> )
+=head2 is_subset( I<set> )
 
-=head2 symmetric_difference( I<set> )
+Returns true if this set is a subset of I<set>.
 
-Returns a new set containing the elements that are present in either this set
-or I<set>, but not in both.
+=head2 is_superset( I<set> )
+
+Returns true if this set is a superset of I<set>.
 
 =head1 AUTHOR
 

@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 
-use Test::More tests => 58;
+use Test::More tests => 59;
 
 use_ok 'Set::Tiny';
 
@@ -13,7 +13,7 @@ isa_ok $a, 'Set::Tiny';
 sub to_s { join '', map { ref $_ eq 'Set::Tiny' ? $_->as_string : $_ } @_ }
 
 is $a->as_string, '()', "empty set stringification";
-is $b->as_string, '(a, b, c)', "non-empty set stringification";
+is $b->as_string, '(a b c)', "non-empty set stringification";
 
 is $a->size, 0, to_s("size of ", $a, " is 0");
 is $b->size, 3, to_s("size of ", $b, " is 3");
@@ -28,12 +28,12 @@ is_deeply [sort $b->members], [qw( a b c )], "members() is an alias for elements
 
 ok $b->contains(qw( a c )), to_s($b, " contains 'a' and 'c'");
 ok $b->has(qw( a c )), "has() is an alias for contains()";
-ok $b->includes(qw( a c )), "includes() is an alias for contains()";
 ok ! $a->contains('b'), to_s($a, " does not contain 'b'");
 ok $a->contains(), to_s($a, " contains the empty list");
 
 ok $a->is_null, to_s($a, " is empty");
 ok ! $b->is_null, to_s($b, " is not empty");
+ok $a->is_empty, "is_empty() is an alias for is_null";
 
 ok $a->is_equal($a), to_s($a, " is equal to ", $a);
 ok $b->is_equal($b), to_s($b, " is equal to ", $b);
@@ -63,39 +63,39 @@ ok $a->is_disjoint($a), to_s($a, " and ", $a, " are disjoint");
 ok $a->is_disjoint($b), to_s($a, " and ", $b, " are disjoint");
 ok ! $b->is_disjoint($b), to_s($b, " and ", $b, " are not disjoint");
 
+ok ! $a->is_properly_intersecting($b), to_s($a, " is not properly intersecting ", $b);
+ok ! $a->is_properly_intersecting($a), to_s($a, " is not properly intersecting ", $a);
+ok ! $b->is_properly_intersecting($b), to_s($b, " is not properly intersecting ", $b);
+my $b2 = Set::Tiny->new(qw( b c d ));
+ok $b->is_properly_intersecting($b2), to_s($b, " is properly intersecting ", $b2);
+
 my $c = Set::Tiny->new(qw( c d e ));
 
 my $d1 = $b->difference($c);
 my $d2 = $c->difference($b);
 
-is $d1->as_string, '(a, b)', to_s("difference of ", $b, " and ", $c, " is ", $d1);
-is $d2->as_string, '(d, e)', to_s("difference of ", $c, " and ", $b, " is ", $d2);
+is $d1->as_string, '(a b)', to_s("difference of ", $b, " and ", $c, " is ", $d1);
+is $d2->as_string, '(d e)', to_s("difference of ", $c, " and ", $b, " is ", $d2);
 
 my $u = $b->union($c);
 my $i = $b->intersection($c);
 my $s = $b->symmetric_difference($c);
 
-is $u->as_string, '(a, b, c, d, e)', to_s("union of ", $b, " and ", $c, " is ", $u);
+is $u->as_string, '(a b c d e)', to_s("union of ", $b, " and ", $c, " is ", $u);
 is $i->as_string, '(c)', to_s("intersection of ", $b, " and ", $c, " is ", $i);
-is $s->as_string, '(a, b, d, e)', to_s("symmetric difference of ", $b, " and ", $c, " is ", $s);
+is $s->as_string, '(a b d e)', to_s("symmetric difference of ", $b, " and ", $c, " is ", $s);
 
 $s = $b->unique($c);
-is $s->as_string, '(a, b, d, e)', "unique() is an alias for symmetric_difference()";
+is $s->as_string, '(a b d e)', "unique() is an alias for symmetric_difference()";
 
 $b->clear;
 is $b->as_string, "()", "clear()";
 
-my $n = $b->insert(qw( a b c ));
-is $b->as_string, "(a, b, c)", "insert()";
-is $n, 3, "insert() returns the number of inserted elements";
-$n = $b->insert(qw( c c d ));
-is $n, 1, "existing elements are not counted";
+$b->insert(qw( a b c d ));
+is $b->as_string, "(a b c d)", "insert()";
 
-$n = $b->remove(qw( a ));
-is $b->as_string, "(b, c, d)", "remove()";
-is $n, 1, "remove() returns the number of removed elements";
-$n = $b->remove(qw( b b x ));
-is $n, 1, "only elements actually removed are counted";
+$b->delete(qw( a b ));
+is $b->as_string, "(c d)", "remove()";
 
 $b->delete('c');
 is $b->as_string, "(d)", "delete() is an alias for remove()";
@@ -105,6 +105,9 @@ is $b->as_string, "(c)", "invert()";
 
 my $x = $b->clone;
 is $x->as_string, "(c)", "clone()";
+
+my $y = $b->copy;
+is $y->as_string, "(c)", "clone() is an alias for copy()";
 
 $x->clear;
 is $b->as_string, "(c)", "clone is unchanged()";
