@@ -12,25 +12,13 @@ sub new {
     return bless \%self, $class;
 }
 
-sub as_string {
-    my $self = shift;
-    return "(" . join(" ", sort keys %$self) . ")";
-}
+sub as_string { "(" . join(" ", sort keys %{$_[0]}) . ")" }
 
-sub size {
-    my $self = shift;
-    return scalar keys %$self;
-}
+sub size { scalar keys %{$_[0]} }
 
-sub element {
-    my ($self, $string) = @_;
-    return exists $self->{$string} ? $string : ();
-}
+sub element { exists $_[0]->{$_[1]} ? $_[1] : () }
 
-sub elements {
-    my $self = shift;
-    return keys %$self;
-}
+sub elements { keys %{$_[0]} }
 
 sub contains {
     my $self = shift;
@@ -39,15 +27,13 @@ sub contains {
 }
 
 sub clone {
-    my $self = shift;
-    my $class = ref $self;
-    return $class->new( keys %$self );
+    my $class = ref $_[0];
+    return $class->new( keys %{$_[0]} );
 }
 
 sub clear {
-    my $self = shift;
-    %$self = ();
-    return $self;
+    %{$_[0]} = ();
+    return $_[0];
 }
 
 sub insert {
@@ -68,71 +54,36 @@ sub invert {
     return $self;
 }
 
-sub is_null {
-    my $self = shift;
-    return ! %$self;
-}
+sub is_null { ! %{$_[0]} }
 
-sub is_subset {
-    my ($self, $set) = @_;
-    return $set->contains( keys %$self );
-}
+sub is_subset { $_[1]->contains( keys %{$_[0]} ) }
 
-sub is_proper_subset {
-    my ($self, $set) = @_;
-    return $self->size < $set->size && $self->is_subset($set);
-}
+sub is_proper_subset { $_[0]->size < $_[1]->size && $_[0]->is_subset($_[1]) }
 
-sub is_superset {
-    my ($self, $set) = @_;
-    return $set->is_subset($self);
-}
+sub is_superset { $_[1]->is_subset($_[0]) }
 
-sub is_proper_superset {
-    my ($self, $set) = @_;
-    return $self->size > $set->size && $set->is_subset($self);
-}
+sub is_proper_superset { $_[0]->size > $_[1]->size && $_[1]->is_subset($_[0]) }
 
-sub is_equal {
-    my ($self, $set) = @_;
-    return $set->is_subset($self) && $self->is_subset($set);
-}
+sub is_equal { $_[1]->is_subset($_[0]) && $_[0]->is_subset($_[1]) }
 
-sub is_disjoint {
-    my ($self, $set) = @_;
-    return $self->intersection($set)->size == 0;
-}
+sub is_disjoint { ! $_[0]->intersection($_[1])->size }
 
 sub is_properly_intersecting {
-    my ($self, $set) = @_;
-    return ! $self->is_disjoint($set)
-            && $self->difference($set)->size != 0
-            && $set->difference($self)->size != 0;
+    ! $_[0]->is_disjoint($_[1])
+      && $_[0]->difference($_[1])->size
+      && $_[1]->difference($_[0])->size
 }
 
-sub difference {
-    my ($self, $set) = @_;
-    my $class = ref $self;
-    my %difference = %$self;
-    delete @difference{ keys %$set };
-    return $class->new( keys %difference );
-}
+sub difference { $_[0]->clone->remove(keys %{$_[1]}) }
 
 sub union {
-    my ($self, $set) = @_;
-    my $class = ref $self;
-    return $class->new( keys %$self, keys %$set );
+    my $class = ref $_[0];
+    return $class->new( keys %{$_[0]}, keys %{$_[1]} );
 }
 
-sub intersection {
-    my ($self, $set) = @_;
-    return $self->difference( $self->clone->difference($set) );
-}
+sub intersection { $_[0]->difference( $_[0]->clone->difference($_[1]) ) }
 
-sub symmetric_difference {
-    my ($self, $set) = @_;
-    return $self->clone->invert( keys %$set );
-}
+sub symmetric_difference { $_[0]->clone->invert(keys %{$_[1]}) }
 
 {
     *copy = \&clone;
