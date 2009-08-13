@@ -133,9 +133,7 @@ sub intersection {
 
 sub symmetric_difference {
     my ($self, $set) = @_;
-    my $clone = $self->clone;
-    $clone->invert( keys %$set );
-    return $clone;
+    return $self->clone->invert( keys %$set );
 }
 
 {
