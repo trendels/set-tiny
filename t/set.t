@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 50;
+use Test::More tests => 57;
 
 use Set::Tiny;
 
@@ -19,17 +19,22 @@ is $b->as_string, '(a, b, c)', "non-empty set stringification";
 is $a->size, 0, to_s("size of ", $a, " is 0");
 is $b->size, 3, to_s("size of ", $b, " is 3");
 
+is $b->element('a'), 'a', "element()";
+is $b->element('z'), undef, "element() on non-existing element";
+is $b->member('a'), 'a', "member() is an alias for element()";
+
 is_deeply [$a->elements], [], "elements() of emtpy set";
 is_deeply [sort $b->elements], [qw( a b c )], "elements()";
 is_deeply [sort $b->members], [qw( a b c )], "members() is an alias for elements()";
 
 ok $b->contains(qw( a c )), to_s($b, " contains 'a' and 'c'");
 ok $b->has(qw( a c )), "has() is an alias for contains()";
+ok $b->includes(qw( a c )), "includes() is an alias for contains()";
 ok ! $a->contains('b'), to_s($a, " does not contain 'b'");
 ok $a->contains(), to_s($a, " contains the empty list");
 
-ok $a->is_empty, to_s($a, " is empty");
-ok ! $b->is_empty, to_s($b, " is not empty");
+ok $a->is_null, to_s($a, " is empty");
+ok ! $b->is_null, to_s($b, " is not empty");
 
 ok $a->is_equal($a), to_s($a, " is equal to ", $a);
 ok $b->is_equal($b), to_s($b, " is equal to ", $b);
@@ -81,11 +86,17 @@ is $s->as_string, '(a, b, d, e)', "unique() is an alias for symmetric_difference
 $b->clear;
 is $b->as_string, "()", "clear()";
 
-$b->insert(qw( a b c d ));
-is $b->as_string, "(a, b, c, d)", "insert()";
+my $n = $b->insert(qw( a b c ));
+is $b->as_string, "(a, b, c)", "insert()";
+is $n, 3, "insert() returns the number of inserted elements";
+$n = $b->insert(qw( c c d ));
+is $n, 1, "existing elements are not counted";
 
-$b->remove(qw( a b ));
-is $b->as_string, "(c, d)", "remove()";
+$n = $b->remove(qw( a ));
+is $b->as_string, "(b, c, d)", "remove()";
+is $n, 1, "remove() returns the number of removed elements";
+$n = $b->remove(qw( b b x ));
+is $n, 1, "only elements actually removed are counted";
 
 $b->delete('c');
 is $b->as_string, "(d)", "delete() is an alias for remove()";
@@ -98,15 +109,4 @@ is $x->as_string, "(c)", "clone()";
 
 $x->clear;
 is $b->as_string, "(c)", "clone is unchanged()";
-
-my $y = $b->clone                       # (c)
-          ->insert('z')                 # (c, z)
-          ->union($u)                   # (a, b, c, d, e, z)
-          ->difference($i)              # (a, b, d, e, z)
-          ->remove('a')                 # (b, d, e, z)
-          ->intersection($u)            # (b, d, e)
-          ->symmetric_difference($s)    # (a)
-          ;
-
-is $y->as_string, "(a)", "modifying methods can be chained";
 

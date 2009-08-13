@@ -22,6 +22,11 @@ sub size {
     return scalar keys %$self;
 }
 
+sub element {
+    my ($self, $string) = @_;
+    return exists $self->{$string} ? $string : ();
+}
+
 sub elements {
     my $self = shift;
     return keys %$self;
@@ -42,28 +47,32 @@ sub clone {
 sub clear {
     my $self = shift;
     %$self = ();
-    return $self;
+    return;
 }
 
 sub insert {
     my $self = shift;
+    my $class = ref $self;
+    my $n = $class->new(@_)->difference($self)->size;
     @{$self}{@_} = ();
-    return $self;
+    return $n;
 }
 
 sub remove {
     my $self = shift;
+    my $class = ref $self;
+    my $n = $self->intersection($class->new(@_))->size;
     delete @{$self}{@_};
-    return $self;
+    return $n;
 }
 
 sub invert {
     my $self = shift;
     exists $self->{$_} ? delete $self->{$_} : ($self->{$_} = undef) for @_;
-    return $self;
+    return;
 }
 
-sub is_empty {
+sub is_null {
     my $self = shift;
     return ! %$self;
 }
@@ -119,12 +128,16 @@ sub intersection {
 
 sub symmetric_difference {
     my ($self, $set) = @_;
-    return $self->clone->invert( keys %$set );
+    my $clone = $self->clone;
+    $clone->invert( keys %$set );
+    return $clone;
 }
 
 {
     no warnings 'once';
     *has = \&contains;
+    *includes = \&contains;
+    *member = \&element;
     *members = \&elements;
     *delete = \&remove;
     *unique = \&symmetric_difference;
@@ -199,11 +212,6 @@ compiler to install. Set::Tiny has no dependencies and contains no C code.
 Note that all methods that expect a I<list> of set elements stringify their
 arguments before inserting them into the set.
 
-Unless otherwise specified, all methods return the invocant, so you can chain
-method calls, e.g.
-
-    $set->insert('a')->remove('b')->union($other_set);
-
 =head2 new( [I<list>] )
 
 Class method. Returns a new Set::Tiny object, initialized with the strings in
@@ -221,15 +229,23 @@ Returns the list of elements in parentheses, separated by commas.
 
 Returns the number of elements.
 
-=head2 members
+=head2 element( [I<string>] )
+
+=head2 member( [I<string>] )
+
+Returns the string if it is contained in the set.
 
 =head2 elements
+
+=head2 members
 
 Returns the (unordered) list of elements.
 
 =head2 has( [I<list>] )
 
 =head2 contains( [I<list>] )
+
+=head2 includes( [I<list>] )
 
 Returns true if B<all> of the elements in I<list> are members of the set. If
 I<list> is empty, returns true.
@@ -240,21 +256,23 @@ Removes all elements from the set.
 
 =head2 insert( [I<list>] )
 
-Inserts the elements in I<list> into the set.
+Inserts the elements in I<list> into the set. Returns the number of
+elements that were actually inserted.
 
 =head2 delete( [I<list>] )
 
 =head2 remove( [I<list>] )
 
-Removes the elements in I<list> from the set. Elements that are not members of
-the set are ignored.
+Removes the elements in I<list> from the set. Elements that are not
+members of the set are ignored. Returns the number of elements that were
+actually removed.
 
 =head2 invert( [I<list>] )
 
 For each element in I<list>, if it is already a member of the set, deletes it
 from the set, else insert it into the set.
 
-=head2 is_empty
+=head2 is_null
 
 Returns true if the set is the empty set.
 
