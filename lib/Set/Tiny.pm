@@ -1,9 +1,9 @@
 package Set::Tiny;
 
+use 5.004;
 use strict;
-use warnings;
 
-our $VERSION = '0.01';
+$Set::Tiny::VERSION = '0.01';
 
 sub new {
     my $class = shift;
@@ -134,7 +134,6 @@ sub symmetric_difference {
 }
 
 {
-    no warnings 'once';
     *has = \&contains;
     *includes = \&contains;
     *member = \&element;

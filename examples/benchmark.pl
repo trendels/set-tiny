@@ -1,6 +1,5 @@
 #!/usr/bin/perl
 use strict;
-use warnings;
 use lib 'lib';
 
 # non-representative benchmark of different Set:: modules
