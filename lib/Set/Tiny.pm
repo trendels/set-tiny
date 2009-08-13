@@ -24,7 +24,7 @@ sub size {
 
 sub elements {
     my $self = shift;
-    return sort keys %$self;
+    return keys %$self;
 }
 
 sub contains {
@@ -225,7 +225,7 @@ Returns the number of elements.
 
 =head2 elements
 
-Returns the list of elements.
+Returns the (unordered) list of elements.
 
 =head2 has( [I<list>] )
 

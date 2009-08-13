@@ -20,8 +20,8 @@ is $a->size, 0, to_s("size of ", $a, " is 0");
 is $b->size, 3, to_s("size of ", $b, " is 3");
 
 is_deeply [$a->elements], [], "elements() of emtpy set";
-is_deeply [$b->elements], [qw( a b c )], "elements()";
-is_deeply [$b->members], [qw( a b c )], "members() is an alias for elements()";
+is_deeply [sort $b->elements], [qw( a b c )], "elements()";
+is_deeply [sort $b->members], [qw( a b c )], "members() is an alias for elements()";
 
 ok $b->contains(qw( a c )), to_s($b, " contains 'a' and 'c'");
 ok $b->has(qw( a c )), "has() is an alias for contains()";
