@@ -1,11 +1,6 @@
-^_build
-^Build$
-^blib
-~$
-\.bak$
-^MANIFEST\.SKIP$
-^Makefile
-^.git/
-^.gitignore$
+^.git
+^MANIFEST.+
+^Makefile$
+^Set-Tiny-
+^blib/
 ^pm_to_blib
-Set-Tiny-.*
