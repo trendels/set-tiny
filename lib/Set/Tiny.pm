@@ -3,8 +3,6 @@ package Set::Tiny;
 use strict;
 use warnings;
 
-use overload q{""} => \&as_string;
-
 our $VERSION = '0.01';
 
 sub new {
@@ -206,9 +204,6 @@ method calls, e.g.
 
     $set->insert('a')->remove('b')->union($other_set);
 
-The only operator that is overloaded for Set::Scalar objects is
-stringification, which calls L</as_string>.
-
 =head2 new( [I<list>] )
 
 Class method. Returns a new Set::Tiny object, initialized with the strings in
@@ -220,8 +215,7 @@ Returns a new set with the same elements as this one.
 
 =head2 as_string
 
-Returns the list of elements in parentheses, separated by commas.  This method
-is called by the overloaded stringification operator.
+Returns the list of elements in parentheses, separated by commas.
 
 =head2 size
 
