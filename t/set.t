@@ -66,10 +66,9 @@ ok ! $b->is_disjoint($b), to_s($b, " and ", $b, " are not disjoint");
 ok ! $a->is_properly_intersecting($b), to_s($a, " is not properly intersecting ", $b);
 ok ! $a->is_properly_intersecting($a), to_s($a, " is not properly intersecting ", $a);
 ok ! $b->is_properly_intersecting($b), to_s($b, " is not properly intersecting ", $b);
-my $b2 = Set::Tiny->new(qw( b c d ));
-ok $b->is_properly_intersecting($b2), to_s($b, " is properly intersecting ", $b2);
 
 my $c = Set::Tiny->new(qw( c d e ));
+ok $b->is_properly_intersecting($c), to_s($b, " is properly intersecting ", $c);
 
 my $d1 = $b->difference($c);
 my $d2 = $c->difference($b);
@@ -94,7 +93,7 @@ is $b->as_string, "()", "clear()";
 $b->insert(qw( a b c d ));
 is $b->as_string, "(a b c d)", "insert()";
 
-$b->delete(qw( a b ));
+$b->remove(qw( a b ));
 is $b->as_string, "(c d)", "remove()";
 
 $b->delete('c');
