@@ -283,6 +283,10 @@ Returns true if this set is a superset of I<set>.
 
 Stanis Trendelenburg, C<< <stanis.trendelenburg at gmail.com> >>
 
+=head1 CREDITS
+
+Thanks to Adam Kennedy for advice on how to make this module C<Tiny>.
+
 =head1 BUGS
 
 Please report any bugs or feature requests to C<bug-set-tiny at rt.cpan.org>, or through
