@@ -234,7 +234,8 @@ Returns a new set containing both the elements of this set and I<set>.
 
 =head2 intersection( I<set> )
 
-Returns a new set containing the elements that are present in both this set and
+Returns a new set containing the elements that are present in both this
+set and I<set>.
 
 =head2 difference( I<set> )
 
