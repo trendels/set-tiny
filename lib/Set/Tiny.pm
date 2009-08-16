@@ -281,7 +281,7 @@ Returns true if this set is a superset of I<set>.
 
 =head1 AUTHOR
 
-Stanis Trendelenburg, C<< <stanis.trendelenburg at gmail.com> >>
+Stanis Trendelenburg, C<< <trendels at cpan.org> >>
 
 =head1 CREDITS
 
