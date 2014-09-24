@@ -3,13 +3,26 @@ package Set::Tiny;
 use 5.004;
 use strict;
 
-$Set::Tiny::VERSION = '0.01';
+require Exporter;
+@Set::Tiny::ISA = qw(Exporter);
+@Set::Tiny::EXPORT_OK = qw(set);
+
+$Set::Tiny::VERSION = '0.02';
 
 sub new {
     my $class = shift;
     my %self;
     @self{@_} = ();
     return bless \%self, $class;
+}
+
+sub set {
+    if ( ref( $_[ 0 ] ) ne '' ) {
+        return Set::Tiny->new( @{ $_[ 0 ] } );
+    }
+    else {
+        return Set::Tiny->new(@_);
+    }
 }
 
 sub as_string { "(" . join(" ", sort keys %{$_[0]}) . ")" }
@@ -124,6 +137,10 @@ Version 0.01
 
     print "i is a subset of s1"   if $i->is_subset($s1);
     print "u is a superset of s1" if $u->is_superset($s1);
+
+    # or using the shorter initializer
+    use Set::Tiny qw(set);
+    my $s1 = set(qw(a b c));
 
 =head1 DESCRIPTION
 
@@ -278,6 +295,11 @@ Returns true if this set is a subset of I<set>.
 =head2 is_superset( I<set> )
 
 Returns true if this set is a superset of I<set>.
+
+=head1 EXPORTABLE FUNCTIONS
+
+If you request it, Set::Tiny can export a function C<set()>, which lets you create
+a set in a slightly more compact form.
 
 =head1 AUTHOR
 
