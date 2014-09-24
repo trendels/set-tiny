@@ -118,7 +118,7 @@ Set::Tiny - Simple sets of strings
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =head1 SYNOPSIS
 
@@ -138,9 +138,12 @@ Version 0.01
     print "i is a subset of s1"   if $i->is_subset($s1);
     print "u is a superset of s1" if $u->is_superset($s1);
 
-    # or using the shorter initializer
-    use Set::Tiny qw(set);
-    my $s1 = set(qw(a b c));
+    # or using the shorter initializer:
+
+    use Set::Tiny qw( set );
+
+    my $s1 = set(qw( a b c ));
+    my $s2 = set([1, 2, 3]);
 
 =head1 DESCRIPTION
 
@@ -175,6 +178,16 @@ L<Set::Object> offers better performance than L<Set::Scalar>, but needs a C
 compiler to install. Set::Tiny has no dependencies and contains no C code.
 
 =back
+
+=head1 EXPORTABLE FUNCTIONS
+
+=head2 set( [I<list or arrayref>] )
+
+If you request it, Set::Tiny can export a function C<set()>, which lets you
+create a Set::Tiny instance in a more compact form.
+
+Unlike the constructor, this function also accepts the set elements as an array
+reference.
 
 =head1 METHODS
 
@@ -295,11 +308,6 @@ Returns true if this set is a subset of I<set>.
 =head2 is_superset( I<set> )
 
 Returns true if this set is a superset of I<set>.
-
-=head1 EXPORTABLE FUNCTIONS
-
-If you request it, Set::Tiny can export a function C<set()>, which lets you create
-a set in a slightly more compact form.
 
 =head1 AUTHOR
 
