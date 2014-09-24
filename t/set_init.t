@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 
-use Test::More tests => 5;
+use Test::More tests => 6;
 
 # test to make sure that the short initializer (`set()`) works
 
@@ -15,3 +15,6 @@ isa_ok $b, 'Set::Tiny';
 
 is $a->as_string, '()', "empty set stringification";
 is $b->as_string, '(a b c)', "non-empty set stringification";
+
+my $c = set(['a', 'b', 'c']);
+is $c->as_string, '(a b c)', "initializer can be called with arrayref";
