@@ -1,5 +1,6 @@
 ^.git
 ^MANIFEST.+
+^MYMETA.+
 ^Makefile$
 ^Set-Tiny-
 ^blib/

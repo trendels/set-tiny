@@ -4,4 +4,4 @@ Revision history for Set-Tiny
         First version, released on an unsuspecting world.
 
 0.02    2014-09-24
-        Added convenience initializer `set`.
+        Added convenience initializer `set`. Thanks to Ricky Morse.
