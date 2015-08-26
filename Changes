@@ -1,7 +1,10 @@
 Revision history for Set-Tiny
 
-0.01    2009-03-18
-        First version, released on an unsuspecting world.
+0.03    2015-08-26
+        Faster intersection. Thanks to Alberto Simões.
 
 0.02    2014-09-24
         Added convenience initializer `set`. Thanks to Ricky Morse.
+
+0.01    2009-03-18
+        First version, released on an unsuspecting world.

@@ -7,7 +7,7 @@ require Exporter;
 @Set::Tiny::ISA = qw(Exporter);
 @Set::Tiny::EXPORT_OK = qw(set);
 
-$Set::Tiny::VERSION = '0.02';
+$Set::Tiny::VERSION = '0.03';
 
 sub new {
     my $class = shift;
@@ -127,7 +127,7 @@ Set::Tiny - Simple sets of strings
 
 =head1 VERSION
 
-Version 0.02
+Version 0.03
 
 =head1 SYNOPSIS
 
