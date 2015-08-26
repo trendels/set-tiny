@@ -94,7 +94,10 @@ sub union {
     return $class->new( keys %{$_[0]}, keys %{$_[1]} );
 }
 
-sub intersection { $_[0]->difference( $_[0]->clone->difference($_[1]) ) }
+sub intersection { 
+    my $class = ref $_[0];
+    return $class->new( grep {exists($_[0]->{$_})} keys %{$_[1]} );
+}
 
 sub symmetric_difference { $_[0]->clone->invert(keys %{$_[1]}) }
 
