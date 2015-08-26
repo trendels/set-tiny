@@ -94,9 +94,15 @@ sub union {
     return $class->new( keys %{$_[0]}, keys %{$_[1]} );
 }
 
-sub intersection { 
+sub intersection {
     my $class = ref $_[0];
-    return $class->new( grep {exists($_[0]->{$_})} keys %{$_[1]} );
+    return $class->new( grep { exists($_[0]->{$_}) } keys %{$_[1]} );
+}
+
+sub intersection2 {
+    my $class = ref $_[0];
+    my ($a, $b) = $_[0]->size > $_[1]->size ? ($_[0], $_[1]) : ($_[1], $_[0]);
+    return $class->new( grep { exists($a->{$_}) } keys %{$b} );
 }
 
 sub symmetric_difference { $_[0]->clone->invert(keys %{$_[1]}) }
@@ -269,6 +275,13 @@ Returns a new set containing both the elements of this set and I<set>.
 
 Returns a new set containing the elements that are present in both this
 set and I<set>.
+
+=head2 intersection2( I<set> )
+
+Like C<intersection()>, but orders the sets by size before comparing their
+elements. This results in a small overhead for small, evenly sized sets, but
+a large speedup when comparing bigger (~ 100 elements) and very unevenly
+sized sets.
 
 =head2 difference( I<set> )
 

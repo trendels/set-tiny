@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 
-use Test::More tests => 59;
+use Test::More tests => 60;
 
 use_ok 'Set::Tiny';
 
@@ -78,10 +78,12 @@ is $d2->as_string, '(d e)', to_s("difference of ", $c, " and ", $b, " is ", $d2)
 
 my $u = $b->union($c);
 my $i = $b->intersection($c);
+my $i2 = $b->intersection2($c);
 my $s = $b->symmetric_difference($c);
 
 is $u->as_string, '(a b c d e)', to_s("union of ", $b, " and ", $c, " is ", $u);
 is $i->as_string, '(c)', to_s("intersection of ", $b, " and ", $c, " is ", $i);
+is $i2->as_string, '(c)', to_s("intersection2 of ", $b, " and ", $c, " is ", $i2);
 is $s->as_string, '(a b d e)', to_s("symmetric difference of ", $b, " and ", $c, " is ", $s);
 
 $s = $b->unique($c);
