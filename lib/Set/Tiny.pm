@@ -17,7 +17,10 @@ sub new {
 }
 
 sub set {
-    if (ref($_[0]) ne '') {
+	if (ref($_[0]) eq "Set::Tiny") {
+		return $_[0]->clone();
+	}
+    elsif (ref($_[0]) ne '') {
         return Set::Tiny->new(@{$_[0]});
     }
     else {
@@ -197,6 +200,9 @@ create a Set::Tiny instance in a more compact form.
 
 Unlike the constructor, this function also accepts the set elements as an array
 reference.
+
+If you pass an existing Set::Tiny to the initializer, it creates a clone of the set
+and returns that.
 
 =head1 METHODS
 
