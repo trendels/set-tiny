@@ -17,8 +17,8 @@ sub new {
 }
 
 sub set {
-    if ( ref( $_[ 0 ] ) ne '' ) {
-        return Set::Tiny->new( @{ $_[ 0 ] } );
+    if (ref($_[0]) ne '') {
+        return Set::Tiny->new(@{$_[0]});
     }
     else {
         return Set::Tiny->new(@_);
