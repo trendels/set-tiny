@@ -7,7 +7,7 @@ require Exporter;
 @Set::Tiny::ISA = qw(Exporter);
 @Set::Tiny::EXPORT_OK = qw(set);
 
-$Set::Tiny::VERSION = '0.03';
+$Set::Tiny::VERSION = '0.04';
 
 sub new {
     my $class = shift;
