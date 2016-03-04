@@ -7,7 +7,7 @@ require Exporter;
 @Set::Tiny::ISA = qw(Exporter);
 @Set::Tiny::EXPORT_OK = qw(set);
 
-$Set::Tiny::VERSION = '0.03';
+$Set::Tiny::VERSION = '0.04';
 
 sub new {
     my $class = shift;
@@ -17,8 +17,11 @@ sub new {
 }
 
 sub set {
-    if ( ref( $_[ 0 ] ) ne '' ) {
-        return Set::Tiny->new( @{ $_[ 0 ] } );
+	if (ref($_[0]) eq "Set::Tiny") {
+		return $_[0]->clone();
+	}
+    elsif (ref($_[0]) eq 'ARRAY') {
+        return Set::Tiny->new(@{$_[0]});
     }
     else {
         return Set::Tiny->new(@_);
@@ -197,6 +200,9 @@ create a Set::Tiny instance in a more compact form.
 
 Unlike the constructor, this function also accepts the set elements as an array
 reference.
+
+If you pass an existing Set::Tiny to the initializer, it creates a clone of the set
+and returns that.
 
 =head1 METHODS
 
