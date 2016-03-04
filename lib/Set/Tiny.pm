@@ -17,9 +17,9 @@ sub new {
 }
 
 sub set {
-	if (ref($_[0]) eq "Set::Tiny") {
-		return $_[0]->clone();
-	}
+    if (ref($_[0]) eq "Set::Tiny") {
+        return $_[0]->clone();
+    }
     elsif (ref($_[0]) eq 'ARRAY') {
         return Set::Tiny->new(@{$_[0]});
     }
